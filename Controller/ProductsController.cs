@@ -1,65 +1,28 @@
-using Microsoft.AspNetCore.Mvc;
-using DatabaseEstoque.Data;
-using DatabaseEstoque.Models;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DatabaseEstoque.Controller
+namespace EstoqueApi.Models
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class ProductsController : ControllerBase
+    public class Product
     {
-        private readonly AppDbContext _context;
+        [Key]
+        public int Id { get; set; }
 
-        public ProductsController(AppDbContext context)
-        {
-            _context = context;
-        }
+        [Required(ErrorMessage = "O nome do produto é obrigatório.")]
+        [StringLength(100, MinimumLength = 2, ErrorMessage = "O nome deve ter entre 2 e 100 caracteres.")]
+        public string Name { get; set; } = string.Empty;
 
-        [HttpGet]
-        public IActionResult GetAllProducts()
-        {
-            return Ok(_context.Products.ToList());
-        }
+        [StringLength(50)]
+        public string? Category { get; set; }
 
-        [HttpGet("{id}")]
-        public IActionResult GetProductById(int id)
-        {
-            var product = _context.Products.Find(id);
-            if (product == null) return NotFound();
-            return Ok(product);
-        }
+        [Range(0, double.MaxValue, ErrorMessage = "O preço deve ser um valor não-negativo.")]
+        [Column(TypeName = "decimal(10,2)")]
+        public decimal Price { get; set; }
 
-        [HttpPost]
-        public IActionResult CreateProduct(Product newProduct)
-        {
-            _context.Products.Add(newProduct);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(GetProductById), new { id = newProduct.Id }, newProduct);
-        }
+        [StringLength(50)]
+        public string? SKU { get; set; }
 
-        [HttpPut("{id}")]
-        public IActionResult UpdateProduct(int id, Product updatedProduct)
-        {
-            var product = _context.Products.Find(id);
-            if (product == null) return NotFound();
-
-            product.Nome = updatedProduct.Nome;
-            product.Preco = updatedProduct.Preco;
-            product.Quantidade = updatedProduct.Quantidade;
-
-            _context.SaveChanges();
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult DeleteProduct(int id)
-        {
-            var product = _context.Products.Find(id);
-            if (product == null) return NotFound();
-
-            _context.Products.Remove(product);
-            _context.SaveChanges();
-            return NoContent();
-        }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
