@@ -1,0 +1,30 @@
+# List all
+GET http://localhost:5099/api/v1/products
+
+# Get by id
+GET http://localhost:5099/api/v1/products/1
+
+# Create product
+POST http://localhost:5099/api/v1/products
+Content-Type: application/json
+
+{
+  "name": "Tênis Runner",
+  "category": "Esporte",
+  "price": 199.90,
+  "sku": "TNX-1001"
+}
+
+# Update product
+PUT http://localhost:5099/api/v1/products/1
+Content-Type: application/json
+
+{
+  "name": "Tênis Runner Pro",
+  "category": "Esporte",
+  "price": 249.90,
+  "sku": "TNX-1001"
+}
+
+# Delete product
+DELETE http://localhost:5099/api/v1/products/1
